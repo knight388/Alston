@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load custom_tag %}
+{% load i18n %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+  	{% csrf_token %}
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	{% for field in wizard.form %}
+	<div>
+		{% if field.name == "description" %}
+			<div class="">{{field.label}}: {{field}}</div>
+		{% endif %}
+		{% if field.name == "doc_url" %}
+			<div class="mar-top-20 url-btn">You should select the support doc: {{field}}</div>
+		{% endif %}
+	</div>
+	{% endfor %}
+	<button class="btn" type="button" class="mar-top-20">Upload</button>
+    <div class="household-btns-div">
+		{% if wizard.steps.prev %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+		{% endif %}
+		{% if wizard.steps.next %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "next step" %}</button>
+		{% endif %}
+	</div>
+  </form>
+{% endblock %}

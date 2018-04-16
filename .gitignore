@@ -1,0 +1,15 @@
+.buildpath
+.project
+.pydevproject
+.settings
+__pycache__
+*.pyc
+*.wav
+trash*
+dev
+local_settings.py
+*.sqlite3
+*.sqlite
+*.db
+*__pycache__*
+media/

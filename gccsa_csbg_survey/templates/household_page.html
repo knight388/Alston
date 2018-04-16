@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load custom_tag %}
+{% load i18n %}
+
+{% block content %}
+<style>
+.content-form label.error {
+margin:0;
+background:red;
+opacity:.7;
+filter:alpha(opacity=70);
+color:#fff;
+-moz-border-radius:4px;
+-webkit-border-radius:4px;
+border-radius:4px;
+-moz-box-shadow:0 0 4px #000;
+-webkit-box-shadow:0 0 4px #000;
+box-shadow:0 0 4px #000;
+border:1px solid #fff;
+padding:5px 10px;
+margin-left: 10px;
+-webkit-text-stroke-width: 0.001px;
+}
+</style>
+<script type="text/javascript">
+/* Fire Valaidate */
+	$(document).ready(function(){
+		$(".content-form").validate();						
+	});
+</script>
+<div class="content">
+	<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+	<form class="form-horizontal content-form" action="" method="post">
+	{% csrf_token %}
+	{{ wizard.management_form }}
+	{% if wizard.form.forms %}
+	{{ wizard.form.management_form }}
+
+	<h3>HouseholdInfo</h3><hr>
+	<div class="form-group">
+	{% for field in wizard.form %}
+		<div class="col-sm-6 devider">
+			{% if field|field_type != "CheckboxInput" %}
+				<div class="col-sm-4">{{field.label_tag}}</div>
+				<div class="col-sm-8 input_field">{{field}}</div>
+			{% else %}
+				<div class="col-sm-8">{{field.label_tag}}</div>
+				<div class="col-sm-4 input_field">{{field}}</div>
+			{% endif %}
+		</div>
+		{% if field.name == 'assistance_child_support' %}
+			{{ "<!--" }}
+		{%endif%}
+	{%endfor%}
+	{{ "-->" }}
+	</div>
+
+	<h3 class="referral-info">Referral Info</h3><hr>
+	<div class = "row pad-lr15">
+	<h4>How did you learn about GCCSA services?</h4>
+	{% for field in wizard.form %}
+		{% if "hear" in field.name %}
+			<div class="col-sm-4">
+				{% if field|field_type == "CheckboxInput" %}
+					<div class="col-sm-10">{{field.label_tag}}</div>
+					<div class="col-sm-2 input_field">{{field}}</div>
+				{% else %}
+					<div class="col-sm-4">{{field.label_tag}}</div>
+					<div class="col-sm-8 input_field">{{field}}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	</div>
+	<hr>
+
+	{% for field in wizard.form %}
+		{% if "headstart_client" in field.name %}
+			<div class = "row pad-lr15">
+				<h4 class = "col-md-10 font-light">{{field.label_tag}} {{field}}</h4>
+			</div>
+		{% endif %}
+	{% endfor %}
+	<hr>
+
+	{% for field in wizard.form %}
+		{% if "previous_client" in field.name %}
+			<div class = "row pad-lr15">
+				<h4 class = "col-md-8">Are you, or a Household Member a previous client of GCCSA? </h4>
+				<div class = "col-md-2 mar-top-10">{{field}}</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	
+	<hr>		
+	<div class = "row pad-lr15">
+	<h4 class = "">Indicate the situation and/or circumstances that led to you requesting GCCSA Services.</h4>
+	{% for field in wizard.form %}
+	{% if "reason" in field.name %}
+		{% if field|field_type == "CheckboxInput" %}
+		<div class="col-sm-4">
+			<div class="col-sm-10">{{field.label_tag}}</div>
+			<div class="col-sm-2 input_field">{{field}}</div>
+		</div>
+		{% else %}
+		<div class="col-sm-8">
+			<div class="col-sm-6">{{field.label_tag}}</div>
+			<div class="col-sm-6 input_field">{{field}}</div>
+		</div>
+		{% endif %}				
+	{% endif %}
+	{% endfor %}
+	</div>
+
+	<div class = "row pad-lr15">
+		<h4 class = "">Other, please specify :</h4>
+		<hr>
+			<br>
+		<hr>
+			<br>
+		<hr>
+	</div>
+
+	<div class = "row pad-lr15">
+	<h4 class = "">GCCSA offers various services to address household needs through Case Management and referrals to Community Partners.</h4>
+	{% for field in wizard.form %}
+		{% if "other_services" in field.name %}
+			<div class="col-sm-4">
+				{% if field|field_type == "CheckboxInput" %}
+					<div class="col-sm-10">{{field.label_tag}}</div>
+					<div class="col-sm-2 input_field">{{field}}</div>
+				{% else %}
+					<div class="col-sm-4">{{field.label_tag}}</div>
+					<div class="col-sm-8 input_field">{{field}}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	</div><hr>
+
+	<div class = "row pad-lr15">
+	{% for field in wizard.form %}
+		{% if "case_management" in field.name %}
+			<div class="col-sm-4">
+				{% if field|field_type == "CheckboxInput" %}
+					<div class="col-sm-10">{{field.label_tag}}</div>
+					<div class="col-sm-2 input_field">{{field}}</div>
+				{% else %}
+					<div class="col-sm-10">{{field.label_tag}}</div>
+					<div class="col-sm-2 input_field">{{field}}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	</div>
+
+	{% else %}
+		{{ wizard.form }}
+	{% endif %}
+	<div class="household-btns-div">
+		{% if wizard.steps.prev %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+		{% endif %}
+		{% if wizard.steps.next %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "next step" %}</button>
+		{% endif %}
+	</div>
+</form>
+</div>
+{% endblock %}

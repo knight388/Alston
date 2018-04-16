@@ -1,0 +1,41 @@
+{% load staticfiles i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% block meta_tags %}{% endblock %}
+        <title>
+            {% block title %}{% trans "GCCSA Survey" %}{% endblock %}
+        </title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{% static 'css/gccsa_csbg_survey.css' %}">
+            <link rel="stylesheet" href="{% static 'css/bootstrap-formhelpers.css' %}">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">    
+            <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css"> 
+        {% endblock %}
+        {% block javascript %}
+            <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>           
+            <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+            <script src="{% static 'js/bootstrap-formhelpers.js' %}"></script>
+            <script src="{% static 'js/jquery.maskedinput.js' %}"></script>
+            <script src="{% static 'js/gccsa_csbg_survey.js' %}"></script>
+            <script src="{% static 'js/jquery.validation.js' %}"></script>
+        {% endblock %}
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body onload="getDefaultMember()">
+        <header>
+            {% include "header.html" %}
+        </header>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
+
+
+    

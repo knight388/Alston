@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load custom_tag %}
+{% load i18n %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+  	{% csrf_token %}
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	<div class="row">
+		<div class="col-md-4 vi-left float-l">
+	    {% for field in wizard.form %}
+	    	<div class="question-checkbox">
+		    	<div class="col-md-1">{{forloop.counter}}.</div>
+		    	<div class="col-md-10">{{field.label}}</div>
+				<div class="col-md-1 input_field">{{field}}</div>
+			</div>
+	    {% endfor %}
+	    </div>
+
+	    <div class="col-md-8">
+		    <!-- <div class="float-r vi-right">
+		    	First Name: {{hoh_info.first_name}} Last Name: {{hoh_info.last_name}}
+		    	SSN: {{hoh_info.ssn}} Mobile Phone: {{hoh_info.mobile_phone}}
+
+		    	Email: {{ac_info.email}}
+		    	preferred_phone: {{ac_info.preferred_phone}}
+		    	preferred_email: {{ac_info.preferred_email}}
+		    	preferred_contact_tod: {{ac_info.preferred_contact_tod}}
+		    </div> -->
+		    <object data="/get_pdf" type="application/pdf" class="object-div">
+		        <span>alt : </span><a href="mytest.pdf">mytest.pdf</a>
+		    </object>
+	    </div>
+    </div>
+
+    <div class="household-btns-div">
+		{% if wizard.steps.prev %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+		{% endif %}
+		<input class="btn" type="submit" value="{% trans "submit" %}"/>
+	</div>
+  </form>
+{% endblock %}

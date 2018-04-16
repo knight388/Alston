@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load custom_tag %}
+{% load i18n %}
+
+{% block content %}
+<style>
+.content-form label.error {
+margin:0;
+background:red;
+opacity:.7;
+filter:alpha(opacity=70);
+color:#fff;
+-moz-border-radius:4px;
+-webkit-border-radius:4px;
+border-radius:4px;
+-moz-box-shadow:0 0 4px #000;
+-webkit-box-shadow:0 0 4px #000;
+box-shadow:0 0 4px #000;
+border:1px solid #fff;
+padding:5px 10px;
+margin-left: 10px;
+-webkit-text-stroke-width: 0.001px;
+}
+</style>
+<script type="text/javascript">
+/* Fire Valaidate */
+	$(document).ready(function(){
+		$(".content-form").validate();						
+	});
+</script>
+<div class="content"ss>
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<form class="form-horizontal content-form" action="" method="post">
+	{% csrf_token %}
+	{{ wizard.management_form }}
+	{% if wizard.form.forms %}
+	{{ wizard.form.management_form }}
+
+	<div class="name-cb-div">
+	<h3>Add Member</h3>
+	<select class="member-select">
+	{% for name in member_names_be %}
+		<option value={{name}}>{{name}}</option>
+	{% endfor %}
+	</select>
+	<hidden class="cd-member-index" value=0></hidden>
+	<hidden class="cur-step" value={{ wizard.steps.step1 }}></hidden>
+	</div><hr>
+
+	<div class="form-group">
+	{% for field in wizard.form %}
+		<div class="col-sm-6 devider">		
+			<div class="col-sm-4">{{field.label_tag}}</div>
+			<div class="col-sm-8 input_field">{{field}}</div>
+		</div>
+	{% if field.name == 'veteran' %}
+	{{ "<!--" }}
+	{%endif%} 
+	{%endfor%}     
+	{{ "-->" }}
+	</div>
+
+	<h3 class="income-info">Income Info</h3><hr>
+	<div class = "row pad-lr15">
+	{% for field in wizard.form %}
+	
+		{% if "employment" in field.name %}
+			{% if field|field_type != "CheckboxInput" %}
+			<div class="col-sm-4">
+				<div class="col-sm-6">{{field.label_tag}}</div>
+				<div class="col-sm-6 input-field">{{field}}</div>
+			</div>
+			{% endif %}
+		{% elif "pay_period" in field.name %}
+		<div class="col-sm-4">
+			<div class="col-sm-6">{{field.label_tag}}</div>
+			<div class="col-sm-6 input-field">{{field}}</div>
+		</div>
+		{% endif %}
+	
+	{% endfor %}
+	{% for field in wizard.form %}
+		{% if "other_income_" in field.name %}
+			<div class="col-sm-4">
+				{% if field|field_type == "CheckboxInput" %}
+					<div class="col-sm-10">{{field.label_tag}}</div>
+					<div class="col-sm-2 input_field">{{field}}</div>
+				{% else %}
+					<div class="col-sm-6">{{field.label_tag}}</div>
+					<div class="col-sm-6 input_field">{{field}}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	</div>
+
+	{% else %}
+		{{ wizard.form }}
+	{% endif %}
+	<div class="household-btns-div">
+		{% if wizard.steps.prev %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+		{% endif %}
+		{% if wizard.steps.next %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}" disabled>{% trans "all members added, next step" %}</button>
+		{% endif %}
+	</div>
+</form>
+</div>
+<script type="text/javascript">
+    function getDefaultMember(){
+		$.ajax({
+			type: "POST",
+			url: "/get_default_member/"
+		}).success(function(res){
+			if(res['education'] === undefined){ // If no data, clear all the tags
+				console.log('Default member data not exist');
+				clear_all_tags()
+			} else { // If no data, clear all the tags
+				console.log('Default member data exist');
+				set_all_tags(res);
+			}
+		});
+
+		$.ajax({
+			type: "POST",
+			url: "/get_member_status/"
+		}).success(function(res){
+			if(res['completed'] == 'true'){ // If all member data are completed
+				$('.household-btns-div > button:last').prop('disabled', false);
+				$('.household-btns-div > input').prop('disabled', false);
+			} else { // If all member data are not completed yet
+				$('.household-btns-div > button:last').prop('disabled', true);
+				$('.household-btns-div > input').prop('disabled', true);
+			}
+		});
+	}
+
+	var clear_all_tags = function(){
+		$('#id_household_member_demographics__2-education :first').prop('selected', true);
+		$('#id_household_member_demographics__2-race :first').prop('selected', true);
+		$('#id_household_member_demographics__2-ethnicity :first').prop('selected', true);
+		$('#id_household_member_income__2-employment :first').prop('selected', true);
+		$('#id_household_member_income__2-pay_period :first').prop('selected', true);
+		$('#id_household_member_income__2-other_income_other').val('');
+
+		$('#id_household_member_demographics__2-no_health_insurance').prop('checked', false);
+		$('#id_household_member_demographics__2-disabled').prop('checked', false);
+		$('#id_household_member_demographics__2-veteran').prop('checked', false);
+		
+		$('#id_household_member_income__2-other_income_cash').prop('checked', false);
+		$('#id_household_member_income__2-other_income_snap').prop('checked', false);
+		$('#id_household_member_income__2-other_income_tanf').prop('checked', false);
+		$('#id_household_member_income__2-other_income_ss').prop('checked', false);
+		$('#id_household_member_income__2-other_income_ssdi').prop('checked', false);
+		$('#id_household_member_income__2-other_income_medicare').prop('checked', false);
+		$('#id_household_member_income__2-other_income_other_agencies').prop('checked', false);
+		$('#id_household_member_income__2-other_income_gifts').prop('checked', false);
+		$('#id_household_member_income__2-other_income_unemployment').prop('checked', false);
+		$('#id_household_member_income__2-other_income_workers_comp').prop('checked', false);
+		$('#id_household_member_income__2-other_income_pensions').prop('checked', false);
+		$('#id_household_member_income__2-other_income_job_training').prop('checked', false);
+		$('#id_household_member_income__2-other_income_military_allotments').prop('checked', false);
+		$('#id_household_member_income__2-other_income_va').prop('checked', false);
+		$('#id_household_member_income__2-other_income_insurance').prop('checked', false);
+		$('#id_household_member_income__2-other_income_alimony').prop('checked', false);
+		$('#id_household_member_income__2-other_income_foster_payments').prop('checked', false);
+		$('#id_household_member_income__2-other_income_child_support').prop('checked', false);
+		$('#id_household_member_income__2-other_income_college_scholarship').prop('checked', false);
+		$('#id_household_member_income__2-other_income_student_loans').prop('checked', false);
+	}
+
+	var set_all_tags = function(res){
+		$('#id_household_member_demographics__2-education').val(res['education']);
+		$('#id_household_member_demographics__2-race').val(res['race']);
+		$('#id_household_member_demographics__2-ethnicity').val(res['ethnicity']);
+		$('#id_household_member_income__2-employment').val(res['employment']);
+		$('#id_household_member_income__2-pay_period').val(res['payperiod']);
+		$('#id_household_member_income__2-other_income_other').val(res['income_other']);
+
+		$('#id_household_member_demographics__2-no_health_insurance').prop('checked', (res['no_health_insurance'] === 'true'));
+		$('#id_household_member_demographics__2-disabled').prop('checked', (res['disabled'] === 'true'));
+		$('#id_household_member_demographics__2-veteran').prop('checked', (res['veteran'] === 'true'));
+		
+		$('#id_household_member_income__2-other_income_cash').prop('checked', (res['other_income_cash'] === 'true'));
+		$('#id_household_member_income__2-other_income_snap').prop('checked', (res['other_income_snap'] === 'true'));
+		$('#id_household_member_income__2-other_income_tanf').prop('checked', (res['other_income_tanf'] === 'true'));
+		$('#id_household_member_income__2-other_income_ss').prop('checked', (res['other_income_ss'] === 'true'));
+		$('#id_household_member_income__2-other_income_ssdi').prop('checked', (res['other_income_ssdi'] === 'true'));
+		$('#id_household_member_income__2-other_income_medicare').prop('checked', (res['other_income_medicare'] === 'true'));
+		$('#id_household_member_income__2-other_income_other_agencies').prop('checked', (res['other_income_other_agencies'] === 'true'));
+		$('#id_household_member_income__2-other_income_gifts').prop('checked', (res['other_income_gifts'] === 'true'));
+		$('#id_household_member_income__2-other_income_unemployment').prop('checked', (res['other_income_unemployment'] === 'true'));
+		$('#id_household_member_income__2-other_income_workers_comp').prop('checked', (res['other_income_workers_comp'] === 'true'));
+		$('#id_household_member_income__2-other_income_pensions').prop('checked', (res['other_income_pensions'] === 'true'));
+		$('#id_household_member_income__2-other_income_job_training').prop('checked', (res['other_income_job_training'] === 'true'));
+		$('#id_household_member_income__2-other_income_military_allotments').prop('checked', (res['other_income_military_allotments'] === 'true'));
+		$('#id_household_member_income__2-other_income_va').prop('checked', (res['other_income_va'] === 'true'));
+		$('#id_household_member_income__2-other_income_insurance').prop('checked', (res['other_income_insurance'] === 'true'));
+		$('#id_household_member_income__2-other_income_alimony').prop('checked', (res['other_income_alimony'] === 'true'));
+		$('#id_household_member_income__2-other_income_foster_payments').prop('checked', (res['other_income_foster_payments'] === 'true'));
+		$('#id_household_member_income__2-other_income_child_support').prop('checked', (res['other_income_child_support'] === 'true'));
+		$('#id_household_member_income__2-other_income_college_scholarship').prop('checked', (res['other_income_college_scholarship'] === 'true'));
+		$('#id_household_member_income__2-other_income_student_loans').prop('checked', (res['other_income_student_loans'] === 'true'));
+	}
+</script>
+{% endblock %}

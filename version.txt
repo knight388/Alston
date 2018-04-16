@@ -1,0 +1,5 @@
+project: alston
+release: 0.5
+git id: ff3d4da
+tag:  (dev_nbb_bug_fix2)
+commit date: 2017-05-09 22:17:07 -0700

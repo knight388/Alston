@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load custom_tag %}
+{% load i18n %}
+
+{% block content %}
+<style>
+.content-form label.error {
+margin:0;
+background:red;
+opacity:.7;
+filter:alpha(opacity=70);
+color:#fff;
+-moz-border-radius:4px;
+-webkit-border-radius:4px;
+border-radius:4px;
+-moz-box-shadow:0 0 4px #000;
+-webkit-box-shadow:0 0 4px #000;
+box-shadow:0 0 4px #000;
+border:1px solid #fff;
+padding:5px 10px;
+margin-left: 10px;
+-webkit-text-stroke-width: 0.001px;
+}
+</style>
+<script type="text/javascript">
+/* Fire Valaidate */
+	$(document).ready(function(){
+		$(".content-form").validate();						
+	});
+</script>
+<div class="content">
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<form class="form-horizontal content-form" action="" method="post">
+	{% csrf_token %}
+	{{ wizard.management_form }}
+	{% if wizard.form.forms %}
+	{{ wizard.form.management_form }}
+	<h3>HeadOfHouseholdMemberInfo</h3><hr>
+	<div class="form-group">	  
+	{% for field in wizard.form %}
+		<div class="col-sm-6 devider">
+			<div class="col-sm-6">	    		
+				{{field.label_tag}}		    		
+			</div>
+			<div class="col-sm-6 input-field">
+				{{field}}
+			</div>
+		</div>
+
+		{% if field.name == 'gender' %}
+			<div class="aci-title"><h3>AlternateContactInfo</h3><hr></div>
+		{% endif %}
+	{% endfor %}
+	</div>
+	{% else %}
+		{{ wizard.form }}
+	{% endif %}
+	{% if wizard.steps.prev %}
+		<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+		<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "next step" %}</button>
+	{% endif %}
+	<input class="btn float-r" type="submit" name="submit" class="continue-btn" value="{% trans "Continue" %}"/>
+</form>
+</div>
+{% endblock %}

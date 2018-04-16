@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load custom_tag %}
+{% load i18n %}
+
+{% block content %}
+<style>
+.content-form label.error,.modal-form label.error {
+margin:0;
+background:red;
+opacity:.7;
+filter:alpha(opacity=70);
+color:#fff;
+-moz-border-radius:4px;
+-webkit-border-radius:4px;
+border-radius:4px;
+-moz-box-shadow:0 0 4px #000;
+-webkit-box-shadow:0 0 4px #000;
+box-shadow:0 0 4px #000;
+border:1px solid #fff;
+padding:5px 10px;
+margin-left: 10px;
+-webkit-text-stroke-width: 0.001px;
+}
+</style>
+<script type="text/javascript">
+/* Fire Valaidate */
+	$(document).ready(function(){
+		$(".content-form").validate();						
+		$(".modal-form").validate();						
+	});
+</script>
+<div class="content">
+	<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+	<form class="form-horizontal content-form" action="" method="post">
+	{% csrf_token %}
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+		
+	<h3>Household Members</h3><hr>
+
+	<div class="row th-div">
+		<div class="col-md-4"><span class="th-span">Name</span></div>
+		<div class="col-md-3"><span class="th-span">Birth Date</span></div>
+		<div class="col-md-3"><span class="th-span">Relationship</span></div>
+		<div class="col-md-2"><span class="th-span"></span></div>
+	</div>
+
+	<div class="row tb-div">
+		{% for i in mem_count %}
+		<div>
+			<div class="col-md-4 membernames-div">
+				{% for name in members.0 %}
+				{% if forloop.counter0 == i %}
+					<span>{{name}}</span>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-md-3 memberbdays-div">
+				{% for bday in members.1 %}
+				{% if forloop.counter0 == i %}
+					<span>{{bday}}</span>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-md-3 memberrels-div">
+				{% for rel in members.2 %}
+				{% if forloop.counter0 == i %}
+					<span>{{rel}}</span>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-md-2 memberdels-div">
+				<button class="am-delete btn" type="button">Delete</button>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<div>
+		<button type="button" class="add-member btn" data-toggle="modal" data-target="#myModal">Add Member</button>
+	</div>
+
+	<div class="hm-fields">
+	{% for field in wizard.form %}
+		<div class="col-sm-6 devider">
+			<div class="col-sm-4">{{field.label_tag}}</div>
+			<div class="col-sm-8 input_field">{{field}}</div>
+		</div>
+	{% endfor %}
+	</div>
+
+	<div class="household-btns-div">
+		{% if wizard.steps.prev %}
+			<button class="btn" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+		{% endif %}
+		{% if wizard.steps.next %}
+			<button class="btn go-demographic-next" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "all members added, next step" %}</button>
+		{% endif %}
+	</div>
+	</form>
+	<form class="form-horizontal modal-form" action="" method="post">
+	{% csrf_token %}
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+		<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add household member</h4>
+			</div>
+			<div class="modal-body row">
+				<div class="row">
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-5">First Name</span>
+						<input class="am-fn col-md-6 required" type="text" name="firstname" requried="true">
+					</div>
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-5">Last Name</span>
+						<input class="am-ln col-md-6" type="text" name="lastname" requried="true">
+					</div>
+				</div>
+				<div class="mar-top-10 row">
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-5">SSN</span>
+						<input class="am-ssn col-md-6" name="am-ssn" type="text" requried="true">
+					</div>
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-5">Mobile Phone</span>
+						<input class="col-md-6 am-mobilephone" type="text" name="mobilephone" requried="true">
+					</div>
+				</div>	        
+				<div class="mar-top-10 row">
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-4">Gender</span>
+						<div class="col-md-7">
+							<input class="am-male" type="radio" name="am-gender" value="male"> Male
+							<input class="am-female" type="radio" name="am-gender" value="female"> Female
+						</div>
+					</div>
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-5">Birth Date</span>
+						<input class="col-md-6 datepicker am-bday" type="text" name="am-birthdate" requried="true">
+					</div>
+				</div>
+				<div class="mar-top-10 row">
+					<div class="col-md-6">
+						<span class="mar-top-5 col-md-5">Relationship</span>
+						<input class="am-rel col-md-6" name="am-rel" type="text" requried="true">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-default am-submit">Add</button>
+				<button type="button" class="btn btn-closedlg" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+		</div>
+	</div>
+	</form>
+{% endblock %}

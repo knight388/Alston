@@ -1,0 +1,219 @@
+/*All Pages*/
+body{
+	padding-top: 20px;}
+
+.content{
+	width: 90%;
+	margin: 0 auto;
+	margin-top: 30px;}
+
+.float-r{
+	float: right;}
+
+.float-l{
+	float: left;}
+
+.btn{
+	/*width: 100px;*/
+	white-space: normal;
+	display: flex;  
+    flex-wrap: wrap;
+	height: 30px;
+	background-color: #fff;
+	border: 1px solid #d7d7d7 !important;}
+
+.btn:hover{
+	background-color: #e3e3e3;}
+
+.font-light{
+	font-weight: 100;}
+
+.mar-top-5{
+	margin-top: 5px;}
+
+.mar-top-10{
+	margin-top: 10px;}
+
+.mar-top-20{
+	margin-top: 20px;}
+
+.mar-top-30{
+	margin-top: 30px;}
+
+/*Header*/
+header{
+	display: block;
+	margin: 0px 30px;
+	height: 85px;}
+
+.header-logo{
+	background-image: url('/static/img/gccsa_header.png');
+	background-size: 275px 85px;
+	width: 275px;
+	height: 85px;}
+
+.header-div-l{
+	margin-top: 25px;}
+
+.title-div{
+	text-align: center;
+	margin-bottom: 20px;
+	font-size: 26px;}
+
+/*About Page*/
+.about-ta, .requirements-ta{
+	width: 100%;
+	height: 400px;}
+.about-ta {
+	text-align: center;	
+}
+.about-continue{
+	margin-right: 20px;
+	float: right;
+	margin-top: 20px;}
+
+/*Requirement Page*/
+.requirements-cb{
+	display: inline-block;}
+
+.submit-form{
+	width: 200px;
+	float: right;}
+
+.rcb-div{
+	width: 800px;
+	display: inline-block;}
+
+.understand-div{
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 2px;}
+
+.submit-btn{
+	float: right;}
+
+.submit-div{
+	margin: 20px 20px 0px;}
+
+.input_field > input {
+	width: 90%;}
+
+.input_field > select {
+	width: 60%;}
+
+.devider {
+	margin-bottom: 15px;
+	max-height: 32px;}
+
+.devider > div:first-child{
+	height: 32px;
+	display: table;}
+
+.devider > div > label{
+	vertical-align: middle;}
+
+.devider label{
+	margin-top: 5px;}
+
+.form-horizontal > h3 {
+	margin-bottom: 5px;}
+
+.bold {
+	font-weight: bold;}
+
+.aci-title{
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-top: 30px;
+	width: 100%;
+	float: left;}
+
+.continue-btn{
+	float: right;
+	margin-top: 20px;
+	margin-right: 20px;}
+
+.form-group{
+	margin-bottom: 80px !important;}
+
+/* Add Member */
+.name-cb-div > h3{
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 30px;}
+
+.name-cb-div > select{
+	width: 20%;
+	height: 30px;
+	vertical-align: middle;
+	margin-top: 10px;}
+
+/* Referral Info */
+.pad-lr15{
+	padding-left: 15px;
+	padding-right: 15px;}
+
+.font-light > label{
+	font-weight: 100 !important;}
+
+.referral-info{}
+
+.household-btns{
+	align-items: right;}
+
+.household-btns-div{
+	width: 30%;
+	float: right;
+	margin-top: 20px;
+	margin-bottom: 40px;
+	display: block;}
+
+/*Household Members*/
+.add-member{
+	margin: 0 auto;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	display: block;}
+
+.th-span{
+	font-size: 18px;}
+
+.tb-div > div{
+	padding-left: 20px;
+	line-height: 30px;}
+
+.input-field > select{
+	width: 100% !important;}
+
+.pad-lr15 > div{
+	height: 40px;}
+
+/* Verify Info Page */
+.question-checkbox{
+	margin: 10px 0;
+	display: flex;
+	min-height: 70px;}
+
+.dis-block{
+	display: block;}
+
+.question-checkbox > .input_field{
+	padding-left: 0px !important;
+	padding-right: 0px !important;}
+
+.vi-left{
+	border: 1px solid #d7d7d7;}
+
+.vi-right{
+	border: 1px solid #d7d7d7;
+	width: 100%;}
+
+.object-div{
+	width: 100%;
+	height: 800px;}
+
+.url-btn > input{
+	display: inline-block !important;}
+
+.th-div {
+	background-color: #eee;}

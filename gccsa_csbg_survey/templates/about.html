@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="title-div">
+		<span>{{title}}</span>
+	</div>
+    <div>
+		<p class="about-ta" name="textarea-about" readonly>{{about_content}}</p>
+	</div>	
+	<div>
+		<form action="{% url 'requirement' %}" method="GET">
+			<button class="about-continue submit-btn btn">Continue</button>
+		</form>
+	</div>
+{% endblock %}

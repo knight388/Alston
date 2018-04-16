@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+	<style type="text/css">
+		ol { padding-left: 2em; text-indent: -1em;}
+		li { margin-left: 2em; }
+	</style>
+	<div class="title-div">
+		<span>{{title}}</span>
+	</div>
+	<div>
+		{% autoescape off %}{{requirements_content}}{% endautoescape %}
+		<p class="requirements-ta" name="textarea-requirement" ></p>
+	</div>
+
+	<div class="submit-div">
+		<div class="rcb-div">
+			<input type="checkbox" class="requirements-cb">
+			<div class="understand-div"><span>I understand the requirements</span></div>
+		</div>
+		
+		<form action="{% url 'information' %}" method="GET" class="submit-form">
+			<button class="requirement-continue submit-btn btn" disabled>Start</button>
+		</form>
+	</div>
+{% endblock %}
